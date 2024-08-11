@@ -5,6 +5,7 @@ import os
 import zipfile
 from auth import auth_token
 
+
 def split_audio_by_speaker(input_audio_path, output_dir, auth_token):
     try:
 

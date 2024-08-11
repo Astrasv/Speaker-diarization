@@ -4,6 +4,14 @@
 
 The **Speaker Diarization Tool** is a Streamlit application that allows users to upload a WAV audio file and splits it into segments based on individual speakers. This tool utilizes the [PyAnnote](https://github.com/pyannote/pyannote-audio) library for speaker diarization and [Pydub](https://github.com/jiaaro/pydub) for audio processing.
 
+## Screenshots
+
+<img width="589" alt="image" src="https://github.com/user-attachments/assets/3bb30c88-d15b-4dce-b707-b9d64e0282e9">
+<img width="589" alt="image" src="https://github.com/user-attachments/assets/719bfc10-9472-48d1-ae63-437f0fe0e36f">
+<img width="589" alt="image" src="https://github.com/user-attachments/assets/4852df33-83fc-4204-9dbe-ba1f68caf776">
+
+
+
 ## Features
 
 - Upload a WAV audio file.

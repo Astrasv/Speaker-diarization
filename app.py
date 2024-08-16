@@ -3,35 +3,28 @@ from pyannote.audio import Pipeline
 from pydub import AudioSegment
 import os
 import zipfile
-from auth import auth_token
-
 
 def split_audio_by_speaker(input_audio_path, output_dir, auth_token):
     try:
-
         pipeline = Pipeline.from_pretrained("pyannote/speaker-diarization", use_auth_token=auth_token)
     except Exception as e:
         return f"Error loading the pipeline: {e}"
 
     try:
-        # Perform speaker diarization
         diarization = pipeline(input_audio_path)
     except Exception as e:
         return f"Error during diarization: {e}"
 
     try:
-        # Load the audio file using pydub
         audio = AudioSegment.from_wav(input_audio_path)
     except Exception as e:
         return f"Error loading audio file: {e}"
 
-    # Create the output directory if it doesn't exist
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
     output_paths = []
     try:
-        # Split audio based on speaker segments
         for i, (turn, _, speaker) in enumerate(diarization.itertracks(yield_label=True)):
             start_ms = int(turn.start * 1000)
             end_ms = int(turn.end * 1000)
@@ -63,28 +56,27 @@ st.info("Upload an audio file and get segments split by speaker.")
 uploaded_file = st.file_uploader("Choose a WAV audio file", type="wav")
 
 if st.button("Split Audio by Speaker"):
-    if uploaded_file is not None and auth_token:
+    if uploaded_file is not None:
         input_audio_path = "uploaded_audio.wav"
         with open(input_audio_path, "wb") as f:
             f.write(uploaded_file.getbuffer())
 
         output_dir = "speaker_segments"
         
-        # Show a loading spinner
+        auth_token = st.secrets["auth"]["token"]
+        
         with st.spinner("Processing..."):
             result = split_audio_by_speaker(input_audio_path, output_dir, auth_token)
 
             if isinstance(result, list):
                 st.success("Audio split successfully!")
                 
-                # Create a zip file of the audio segments
                 zip_file_path = create_zip(output_dir)
                 
-                # Provide a download link for the zip file
                 with open(zip_file_path, "rb") as f:
                     st.download_button("Download Zip File", f, file_name=zip_file_path)
 
             else:
                 st.error(result)
     else:
-        st.error("Please upload a WAV file and enter your Hugging Face auth token.")
+        st.error("Please upload a WAV file.")
